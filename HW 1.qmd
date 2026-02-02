@@ -1,0 +1,208 @@
+---
+title: "HW 1"
+format: pdf
+editor: visual
+---
+
+Setup:
+
+```{r}
+if (require('forcats') == FALSE){
+  install.packages('forcats')
+}
+if (require('HSAUR') == FALSE){
+  install.packages('HSAUR')
+}
+```
+
+### Question 1
+
+a.  A factor variable represents a set of labels, and each label is tied to data/number. This differs from type character because characters don't have a mapping to numbers/data, meanwhile factors do.
+
+b.  In gss_cat, race is a factor variable with 4 levels: (Other: 1959, Black: 3129, White: 16395, Not Applicable: 0). As shown below in the code snippet.
+
+```{r}
+class(forcats::gss_cat$race)
+levels(forcats::gss_cat$race)
+nlevels(forcats::gss_cat$race)
+table(forcats::gss_cat$race)
+```
+
+c.  The following code block answers c.
+
+```{r}
+write.csv(forcats::gss_cat, 'gss.csv', row.names = FALSE)
+gss_read_in <- read.csv('gss.csv')
+class(gss_read_in)
+```
+
+d.  A dataframe differs from a matrix due to a matrix having uniform types and a dataframe allowing each column to have its own unique type. Shown in the codeblock below.
+
+```{r}
+q1_d_df <- data.frame (
+  Training = c("Strength", "Stamina", "Other"),
+  Pulse = c(100L, 150L, 120L),
+  Duration = c(60, 30, 45)
+)
+q1_d_matrix <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 3, ncol = 2)
+q1_d_df
+q1_d_matrix
+```
+
+e.  Lists in R are useful because you can have several types inside of it, for example storing all miscellaneous information.
+
+```{r}
+#| echo: false
+q1_e <- list(5, "Bob", 7, FALSE, c(2.5, 5.6))
+q1_e
+```
+
+### Question 2
+
+a.  Here is a code block that will determine if HSAUR has data sets, list all of them, obtain details about a specific data set, and bring data from a specific data set into the R environment.
+
+```{r}
+q2_datasets_in_h <- data(package = 'HSAUR') # Finding data sets in package
+q2_ds_list <- q2_datasets_in_h$results[, 'Item'] # Listing data sets
+q2_ds_list
+dim(HSAUR::BCG) # Getting dimensional details about data set
+q2_retrieve_data <- HSAUR::BCG # Access set, and bring it into R env
+q2_retrieve_data
+```
+
+b.  Here is a code block for part b.
+
+```{r}
+set.seed(123457) # Set seed
+q2_s1 <- rnorm(n = 30, mean = 100, sd = 2) # Get random sample
+mean(q2_s1) # Mean
+var(q2_s1) # Variance
+q2_s2 <- rnorm(n = 300, mean = 100, sd = 2) # Get random sample of 300
+mean(q2_s2) # Mean
+var(q2_s2) # Variance
+curve(dnorm, from = -3, to = 3, q2_s1)
+curve(dnorm, from = -3, to = 3, q2_s2)
+```
+
+(iii). The graphs produced by dnorm() illustrates that both random sampling are similar to each other, and that the deviation from the mean is unlikely.
+
+(iiii). The first sampling for mean seems to be similar in accuracy, however, the higher sampling method for variance is less accurate then the lower sampled variance.
+
+### Question 3
+
+```{r}
+q3_a = 0.85
+q3_a_inv = 1 - 0.85
+q3_b = 0.6
+q3_b_inv = 1 - 0.6
+
+q3_a * q3_b # Part A.
+q3_a_inv * q3_b_inv # Part B.
+(q3_a_inv * q3_b) + (q3_a * q3_b_inv) # Part C, only B ends on time or A ends on time.
+
+```
+
+a.  The probability of both ending on time is 0.51. A times B.
+b.  The probability of neither ending on time is 0.06. Inverse of A times inverse of B.
+c.  The probability of only one ending on time is 0.43.
+d.  The two events are NOT mutually exclusive since both can occur. Simply because the statistics seminar ends on time does not mean the sociology seminar can not also end on time.
+
+### Question 4 (Everything is in term of 1000 INR)
+
+```{r}
+q4_mean <- 527
+q4_sd <- 112
+
+pnorm(500, mean=q4_mean, sd=q4_sd, lower.tail=FALSE) # Part A, c.d.f
+qnorm(.95, mean=q4_mean, sd=q4_sd) # Part B, p.d.f
+
+# Part C #
+set.seed(123457) # Set seed for reproducability 
+q4_rs <- rnorm(n = 250, mean = q4_mean, sd = q4_sd) # Get random sample
+mean(q4_rs)
+var(q4_rs)
+
+# Part D #
+q4_se <- sd(q4_rs) / sqrt(250)
+q4_se
+```
+
+a.  The probability is the c.d.f set on the upper tail of probability, thus 0.5952501.
+
+b.  To each the top 5% in store revenue you need 711.22.
+
+c.  An estimate for true mean is 525.065 and variance is 11046.78
+
+d.  The standard error for the sample conducted in part c is 6.64433. This states that a variation of 6.6 can be expected between each samples mean. Meanwhile, standard deviation tells us the variability from the mean for that specific sample.
+
+### Question 5
+
+```{r}
+# Two groups, each different treatment
+# Size 15 drawn from each group
+# Two questionares at different times, which they create a continuous r.v.
+# Change in health status is normally distributed with var same for both groups
+
+q5_n = 15
+q5_g1_mean = 25.5
+q5_g1_sd = 2.5
+
+q5_g22_mean = 22.3
+q5_g22_sd = 3.1
+
+# Part A #
+q5_top <- ((q5_n - 1) * q5_g1_sd^2) + ((q5_n - 1) * q5_g22_sd^2)
+q5_bot <- (q5_n * 2) - 2
+q5_pooled_sd <- sqrt(q5_top / q5_bot)
+cat("Pooled SD: ", q5_pooled_sd, "\n")
+
+# Part B #
+# Verify whether the two means are the same or significantly different in the two groups. 
+q5_param_of_interest <- q5_g1_mean - q5_g22_mean # We are trying to see if there is any difference
+q5_standard_error <- q5_pooled_sd * sqrt(1/q5_n + 1/q5_n)
+q5_t_score <- q5_param_of_interest / q5_standard_error
+cat("T Score: ", q5_t_score, "\n") # Get the T-Score
+q5_degress <- (q5_n * 2) - 2
+q5_p_value <- 2 * (1 - pt(abs(q5_t_score), q5_degress))
+cat("P Value: ", q5_p_value, "\n")
+
+# Part C #
+q5_t_crit_value <- qt(0.975, q5_degress) # 0.975 because confidence is split across both end of the tails
+q5_ci <- c(q5_param_of_interest - q5_t_crit_value * q5_standard_error,
+           q5_param_of_interest + q5_t_crit_value * q5_standard_error)
+cat("Confidence Interval: ", q5_ci, "\n")
+
+# Part D #
+q5_effect_size <- q5_param_of_interest / q5_pooled_sd
+cat("Effect size: ", q5_effect_size, "\n")
+```
+
+a. The pooled estimate is 2.816, meaning that each data point can differ around 2.816 from the mean.
+
+b. Utilizing the T-test the resulting p value is 0.004249709 which is less than 0.05, providing confidence to reject the null hypothesis and state that there is a statistically significant difference.
+
+c. The confidence interval for the difference of the two means is (1.09369, 5.30631). Because this does not include 0, that is no difference between the means, we can be confident that there is a difference between the two means. This corroborates the previous questions conclusion.
+
+d. The effect size shows that the difference between group 1 and 2 is 1.13 standard deviations higher which is substantially different.
+
+## Sketch Pad
+
+```{r}
+class(forcats::gss_cat)
+forcats::gss_cat$race
+```
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
