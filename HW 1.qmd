@@ -86,7 +86,7 @@ curve(dnorm, from = -3, to = 3, q2_s2)
 
 (iii). The graphs produced by dnorm() illustrates that both random sampling are similar to each other, and that the deviation from the mean is unlikely.
 
-(iiii). The first sampling for mean seems to be similar in accuracy, however, the higher sampling method for variance is less accurate then the lower sampled variance.
+(iiii). The sampling for mean seems to be similar in accuracy for both groups, however, the higher sampling groups variance is less accurate then the lower sampled variance.
 
 ### Question 3
 
@@ -129,7 +129,7 @@ q4_se
 
 a.  The probability is the c.d.f set on the upper tail of probability, thus 0.5952501.
 
-b.  To each the top 5% in store revenue you need 711.22.
+b.  To reach the top 5% in store revenue you need 711.22.
 
 c.  An estimate for true mean is 525.065 and variance is 11046.78
 
