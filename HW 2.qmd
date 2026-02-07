@@ -1,0 +1,85 @@
+---
+title: "HW 2"
+format: pdf
+editor: visual
+---
+
+Setup:
+
+```{r}
+if (require('HSAUR') == FALSE){
+  install.packages('HSAUR')
+}
+```
+
+### Question 1
+
+a).
+
+```{r}
+##########
+# Part A #
+##########
+q1_a_ds <- HSAUR::BtheB$bdi.pre
+q1_a_hist <- hist(q1_a_ds, main = "Pre Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+q1_a_xvals <- seq(min(q1_a_ds), max(q1_a_ds), 0.01)
+q1_a_yvals <- dnorm(q1_a_xvals, mean = mean(q1_a_ds), sd = sd(q1_a_ds))
+q1_a_yvals <- q1_a_yvals * diff(q1_a_hist$mids[1:2]) *length(q1_a_ds)
+lines(q1_a_xvals, q1_a_yvals)
+```
+
+b).
+
+```{r}
+##########
+# Part B #
+##########
+par(mfrow = c(1, 2))
+ds <- HSAUR::BtheB$bdi.2m
+hist <- hist(ds, main = "2M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+xvals <- seq(min(ds, na.rm = TRUE), max(ds, na.rm = TRUE), 1)
+yvals <- dnorm(xvals, mean = mean(ds, na.rm = TRUE), sd = sd(ds, na.rm = TRUE))
+yvals <- yvals * diff(hist$mids[1:2]) * length(ds)
+lines(xvals, yvals)
+plot(density(ds, na.rm = TRUE), main = "2M Beat The Blues") # Kernel Density Plot
+```
+
+c).
+
+```{r}
+##########
+# Part C #
+##########
+par(mfrow = c(1, 2))
+hist(HSAUR::BtheB$bdi.2m, main = "2M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+hist(HSAUR::BtheB$bdi.8m, main = "8M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+```
+
+d). You can display all graphics with the partition function as shown below. Another method would be to use the layout function which would also be suitable.
+```{r}
+##########
+# Part D #
+##########
+par(mfrow = c(2, 3))
+hist(HSAUR::BtheB$bdi.pre, main = "Pre Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+hist(HSAUR::BtheB$bdi.2m, main = "2M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+hist(HSAUR::BtheB$bdi.4m, main = "4M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+hist(HSAUR::BtheB$bdi.6m, main = "6M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+hist(HSAUR::BtheB$bdi.8m, main = "8M Beat The Blues", ylab = "Frequency", xlab = "Blues Beaten")
+```
+
+e).
+```{r}
+##########
+# Part E #
+##########
+ds <- HSAUR::BtheB
+ds
+# Because there is no drug type variable, treatment is perceived to be drug type.
+pairs(ds[4:8], pch=21, upper.panel = NULL, bg = c('red', "green")[unclass(ds$treatment)]) 
+```
+
+
+
+
+
