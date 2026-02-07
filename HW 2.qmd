@@ -56,6 +56,7 @@ hist(HSAUR::BtheB$bdi.8m, main = "8M Beat The Blues", ylab = "Frequency", xlab =
 ```
 
 d). You can display all graphics with the partition function as shown below. Another method would be to use the layout function which would also be suitable.
+
 ```{r}
 ##########
 # Part D #
@@ -69,6 +70,7 @@ hist(HSAUR::BtheB$bdi.8m, main = "8M Beat The Blues", ylab = "Frequency", xlab =
 ```
 
 e).
+
 ```{r}
 ##########
 # Part E #
@@ -79,7 +81,101 @@ ds
 pairs(ds[4:8], pch=21, upper.panel = NULL, bg = c('red', "green")[unclass(ds$treatment)]) 
 ```
 
+### Question 2
 
+a). Via the code below, the data distribution seems to be identical based on the Q-Q plots due to them both having similar shapes. The only difference is at the tail ends of each case having slightly different outcomes, but perhaps with greater sample sizes these anomalies will taper out.
 
+```{r}
+##########
+# Part A #
+##########
+par(mfrow = c(1, 2))
+set.seed(1234567)
+case_1 <- rnorm(n = 100, mean = 20, sd = 2)
+set.seed(45301)
+case_2 <- rnorm(n = 100, mean = 20, sd = 2)
+qqnorm(case_1, main = "Case 1")
+qqnorm(case_2, main = "Case 2")
+```
 
+b).
 
+```{r}
+par(mfrow = c(1, 2))
+df <- HSAUR::BtheB
+no_drug <- df[df$drug == "No", ]
+yes_drug <- df[df$drug == "Yes", ]
+
+boxplot(no_drug$bdi.pre, main="Pre: No Drugs", ylab = "Blues Beaten")
+boxplot(yes_drug$bdi.pre, main="Pre: Yes Drugs", ylab = "Blues Beaten")
+
+```
+
+### Question 3
+
+a). It's known within the data set that every rank is unique due to this being an incremental list of the top 2000 companies. Therefore, by ensuring no ranking is in the sampled set twice, we can be sure there is no re-sampling.
+
+```{r}
+##########
+# Part A #
+##########
+set.seed(123456) # For reproducability 
+x <- Forbes2000
+sample_size <- 200
+sample_200 <- x[sample(nrow(x), size = sample_size, replace = FALSE), ]
+sample_check <- c()
+for(rank in sample_200$rank){
+  rank_in <- rank %in% sample_check
+  if (rank_in){
+    rank
+    sample_check
+    break
+  }
+  sample_check <- append(sample_check, rank)
+}
+if (sample_size == length(sample_check)){
+  print("No ranks have been repeated.")
+} else{
+  print("Rank has been repeated")
+}
+
+```
+
+b).
+
+```{r}
+##########
+# Part B #
+##########
+sales <- sample_200$sales
+profits <- sample_200$profits
+assests <- sample_200$assets
+market_value <- sample_200$marketvalue
+
+cat("---------Means----------\n")
+cat("Sales Mean:", mean(sales, na.rm = TRUE), "\nProfits Mean: ", mean(profits, na.rm = TRUE), "\nAssests Mean:", mean(assests, na.rm = TRUE), "\nMarket Value Mean:", mean(market_value, na.rm = TRUE), "\n")
+
+cat("--------Vars-----------\n")
+cat("Sales Var:", var(sales, na.rm = TRUE), "\nProfits Var: ", var(profits, na.rm = TRUE), "\nAssests Var:", var(assests, na.rm = TRUE), "\nMarket Value Var:", var(market_value, na.rm = TRUE), "\n")
+```
+
+### Question 4
+
+a). Bernoulli's distribution allows for only two values, success(1) or failure(0), so Y can assume either one of those two. It can attribute success with probability of $\pi$, and failure with $1 - \pi$.
+
+b). The probability mass function is as follows: $p(y; \pi) = \pi^y (1 - \pi)^{1-y}$
+
+c).
+
+```{r}
+##########
+# Part C #
+##########
+set.seed(1234567)
+
+bern_prob = 0.8
+rb <- rbinom(n = 100, size=1, prob=bern_prob)
+cat("Mean:", mean(rb), "\nVar:", var(rb))
+```
+
+d). The MOM estimate based on the parameter $\pi$ is 0.81 due to the mean calculated from the random sample in part c.
