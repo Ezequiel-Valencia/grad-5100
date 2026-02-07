@@ -76,7 +76,6 @@ e).
 # Part E #
 ##########
 ds <- HSAUR::BtheB
-ds
 # Because there is no drug type variable, treatment is perceived to be drug type.
 pairs(ds[4:8], pch=21, upper.panel = NULL, bg = c('red', "green")[unclass(ds$treatment)]) 
 ```
@@ -179,3 +178,180 @@ cat("Mean:", mean(rb), "\nVar:", var(rb))
 ```
 
 d). The MOM estimate based on the parameter $\pi$ is 0.81 due to the mean calculated from the random sample in part c.
+
+
+
+
+
+### Question 5
+
+a). The probability is 0.2262191.
+```{r}
+##########
+# Part a #
+##########
+pii <- 0.05
+inv <- 0.95
+k <- 0
+m <- 5
+
+no_defects <- choose(m, k) * pii^k * inv^{m - k}
+1 - no_defects # Its the opposite of no defects, since there will be at least one
+
+
+```
+
+
+b). The probability is 0.9774075.
+
+```{r}
+##########
+# Part B #
+##########
+
+pii <- 0.05
+inv <- 0.95
+k <- 1
+m <- 5
+
+one_def <- choose(m, k) * pii^k * inv^{m - k}
+
+pii <- 0.05
+inv <- 0.95
+k <- 0
+m <- 5
+
+no_defects <- choose(m, k) * pii^k * inv^{m - k}
+
+no_defects + one_def # The probability that either 0 or 1 defect is found.
+
+```
+
+
+c). The probability is 0.7737809.
+
+```{r}
+##########
+# Part C #
+##########
+
+pii <- 0.05
+inv <- 0.95
+k <- 0
+m <- 5
+
+choose(m, k) * pii^k * inv^{m-k}
+
+# 0.95 * .95 * .95 * .95 * .95, aka this
+
+```
+
+
+d). The probability of exactly 2 defects is 0.02143438.
+```{r}
+##########
+# Part D #
+##########
+
+pii <- 0.05
+inv <- 0.95
+k <- 2
+m <- 5
+
+choose(m, k) * pii^k * inv^{m-k}
+
+```
+
+
+e). The probability that all are defects is 3.125e-07.
+```{r}
+##########
+# Part E #
+##########
+
+pii <- 0.05
+inv <- 0.95
+k <- 5
+m <- 5
+
+choose(m, k) * pii^k * inv^{m-k}
+
+# 0.05 * .05 * .05 * .05 * .05 aka this
+
+```
+
+
+### Question 6
+
+a). The probability is 0.9927049 for at least 2 customers arriving.
+```{r}
+##########
+# Part A #
+##########
+
+poisson_func <- function(n_customers){
+  y_mean <- 7 # Irrespective of hour
+  top <- exp(-1 * y_mean) * y_mean^n_customers # exp means e^{}
+  bot <- factorial(n_customers)
+  top / bot
+}
+
+no_customer <- poisson_func(0)
+one_customer <- poisson_func(1)
+
+1 - (no_customer + one_customer) # Since its two or more, that means prob for >= 2, aka 1 - no and one.
+```
+
+b). The probability is 0.006383174 for exactly one customer.
+
+```{r}
+poisson_func(1)
+```
+
+c). The probability of at most 5 customers arriving is 0.3007083.
+```{r}
+allowed_vals <- poisson_func(5) + poisson_func(4) + poisson_func(3) + poisson_func(2) + poisson_func(1) + poisson_func(0)
+allowed_vals
+```
+
+
+d). The probability of no customers is 0.000911882.
+```{r}
+poisson_func(0)
+```
+
+
+### Question 7
+
+a). Knowing that the Y is roughly equivalent to Uniform(0,$\theta$), the mean of such a distribution for sample Y is $Y = \theta / 2$. Thus, the method of moments estimate for $\theta$ would be $Y * 2 = \theta$ because it is only one parameter that is unknown.
+
+
+b). When the sample size is increased from 100 to 1000, the MOM estimate deviates more from the actual value, and has a density plot that depicts density is less concentrated around the value 10 for n = 1000.
+```{r}
+
+# random sample with n observations in it
+# Taken from uniform distribution of interval (0, theta)
+# What is the MOM estimate of theta
+par(mfrow = c(1, 2))
+set.seed(1234567)
+samp <- runif(n = 100, min = 0, max = 20)
+samp_mean <- mean(samp)
+plot(density(samp))
+cat("Mean(n = 100):", samp_mean, "MOM Estimate:", samp_mean * 2, "\n")
+
+samp <- runif(n = 1000, min = 0, max = 20)
+samp_mean <- mean(samp)
+plot(density(samp))
+cat("Mean(n = 1000):", samp_mean, "MOM Estimate:", samp_mean * 2)
+```
+
+
+
+
+
+
+
+
+
+
+
