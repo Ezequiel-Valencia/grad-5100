@@ -1,3 +1,5 @@
 *.csv
 *.pdf
 .R*
+.envrc
+.conda_venv
