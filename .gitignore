@@ -3,3 +3,6 @@
 .R*
 .envrc
 .conda_venv
+!cars.csv
+!SalesData.csv
+*.html
