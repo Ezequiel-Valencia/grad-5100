@@ -1,0 +1,95 @@
+---
+title: "HW 5.2"
+format: pdf
+editor: visual
+---
+
+Setup:
+
+```{r}
+```
+
+### Question 1
+
+a). Given Y1 and Y2 that are both independent variables, the correlation should be 0. That is because the mean of Y1 and Y2 are separate from each other, so E(Y1, Y2) results in E(Y1) \* E(Y2). $Corr(Y_1, Y_2) = \frac{E(Y_1Y_2) - E(Y_1)E(Y_2)}{\sqrt{Var(Y_1)Var(Y_2)}} -> \frac{E(Y_1)E(Y_2) - E(Y_1)E(Y_2)}{\sqrt{Var(Y_1)Var(Y_2)}} -> 0$
+
+b). The normal distribution has the unique property that if Y1 and Y2 are uncorrelated normal random variables, then they are independent. This makes logical sense because
+
+### Question 2
+
+a). The simplification of $Var(Y_1,Y_2)$ is (b) because when converting variance into $\sum^k_{j=1}\sum^k_{l=1}a_ja_lCov(Y_j, Y_l)$ you get $Cov(Y_1, Y_1) + Cov(Y_2, Y_2) + Cov(Y_1, Y_2) + Cov(Y_2, Y_1)$. Covariance of the same variable is just variance, and order of covariance input to the function does not matter. Therefore, we can simply the equation to the answer (b), that is $Var(Y_1) + Var(Y_2) + 2Cov(Y_1, Y_2)$.
+
+### Question 3
+
+a). The formula would be $f(y;100,4) = \prod^{500}_{j=1}f(y_j;100,4) = \frac{1}{\sqrt{8\pi}}\exp(-\frac{1}{8} \sum^{500}_{j=1} (y_j-100)^2)$
+
+```{r}
+##########
+# Part A #
+##########
+set.seed(123457) # For reproducability 
+n <- 500
+q3_mean <- 100
+q3_var <- 4
+samples <- rnorm(n, 100, 2)
+
+
+
+
+```
+
+b). The mean and variance are calculated below:
+
+```{r}
+
+# Because the mean for each sample is the same as that of the normal distribution the result would be as follows:
+cat("The Summation Mean Is: ", n * q3_mean)
+
+# The same logic can be applied for variance.
+cat("\nThe Summation Variance Is: ", n * q3_var)
+
+
+```
+
+### Question 4
+
+a). Given $Y_i, X_{i1}, X_{i2}$ for $n$ rows, the normal MLR model with intercept $\beta_0$ is as follows: $y = \beta_0 + \beta_1X_1 + \beta_2X_2$. To obtain each optimal beta, partial derivatives of the optimization equation $S(\beta_0,\beta_1; Data) = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2$: $\beta_{0,LSE} = \frac{\partial}{\partial \beta_0} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-1 \Rightarrow \newline -2\sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})$
+
+$\beta_{1,LSE} = \frac{\partial}{\partial \beta_1} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i1} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i1} - \beta_0x_{i1} - \beta_1x_{i1}^2 - \beta_2x_{i2}x_{i1})$
+
+$\beta_{2,LSE} = \frac{\partial}{\partial \beta_2} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i2} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i2} - \beta_0x_{i2} - \beta_1x_{i1}x_{i2} - \beta_2x_{i2}^2)$
+
+### Question 5
+
+a). 
+
+```{r}
+
+set.seed(123457)
+n <- 80
+beta_0 <- 2
+beta_1 <- 0.5
+beta_2 <- 0.85
+
+error <- rnorm(n, mean = 0, sd = 0.5)
+gen_x_1 <- rnorm(n, mean = 3, sd = 1)
+gen_x_2 <- rbinom(n, size=1, prob=0.6)
+
+y_val <- beta_0 + beta_1* gen_x_1 + beta_2*gen_x_2 + error
+
+df = data.frame(x=gen_x_1,
+                x2=gen_x_2,
+                y=y_val)
+
+lm(y ~ x + x2, data=df)
+
+
+
+# y ~ beta_0 + beta_1 * x + beta_2 * x2 + error
+#for (i in seq_along(gen_x_1)){
+  # cat("i: ", i, "val: ", beta_0 + beta_1 * gen_x_1[i] + beta_2 * gen_x_2[i] + error[i], "\n")
+  #y_val[i] <- beta_0 + beta_1* gen_x_1[i] + beta_2*gen_x_2[i] + error[i]
+#}
+
+```
+
