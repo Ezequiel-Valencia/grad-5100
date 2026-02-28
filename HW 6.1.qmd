@@ -72,7 +72,11 @@ cat("The determinant of D is: ", det(D))
 e).
 ```{r}
 D_inverse <- solve(D)
-D_inverse %*% D
+cat("Inverse of matrix: \n")
+D_inverse
+
+cat("Multiplication with original to produce identity matrix: \n")
+round(D_inverse %*% D)
 ```
 
 
@@ -81,41 +85,56 @@ D_inverse %*% D
 a). The formula would be $f(y;100,4) = \prod^{500}_{j=1}f(y_j;100,4) = \frac{1}{\sqrt{8\pi}}\exp(-\frac{1}{8} \sum^{500}_{j=1} (y_j-100)^2)$
 
 ```{r}
-##########
-# Part A #
-##########
-set.seed(123457) # For reproducability 
-n <- 500
-q3_mean <- 100
-q3_var <- 4
-samples <- rnorm(n, 100, 2)
-
-
-
-
-```
-
-b). The mean and variance are calculated below:
-
-```{r}
-
-# Because the mean for each sample is the same as that of
-#the normal distribution the result would be as follows:
-cat("The Summation Mean Is: ", n * q3_mean)
-
-# The same logic can be applied for variance.
-cat("\nThe Summation Variance Is: ", n * q3_var)
-
-
+beta_matrix <- matrix(data=c(4, 2, -2, 2, 2, 1, -2, 1, 6), nrow = 3, ncol = 3, byrow = TRUE)
+sol <- matrix(data=c(4, 7, 9), nrow = 3, ncol = 1, byrow = TRUE)
+cat("The Beta Matrix: \n")
+beta_matrix
+cat("The solution vector: \n")
+sol
+cat("The determinant: \n")
+det(beta_matrix)
+cat("-------------------------\n")
+cat("The solution for each respective beta starting at beta_1: \n")
+solve(beta_matrix, sol)
 ```
 
 ### Question 4
 
-a). Given $Y_i, X_{i1}, X_{i2}$ for $n$ rows, the normal MLR model with intercept $\beta_0$ is as follows: $y = \beta_0 + \beta_1X_1 + \beta_2X_2$. To obtain each optimal beta, we must take partial derivatives of the optimization equation $S(\beta_0,\beta_1; Data) = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2$: $\newline \beta_{0,LSE} = \frac{\partial}{\partial \beta_0} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-1 \Rightarrow \newline -2\sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})$
+a).
+```{r}
+set.seed(123457)
+amat <- matrix(data = 0, nrow = 20, ncol = 4)
+amat
+```
+b).
+```{r}
+set.seed(123457)
+m1 <- matrix(data = 1, nrow = 2, ncol = 3)
+m2 <- matrix(data = 2, nrow = 3, ncol = 3)
 
-$\beta_{1,LSE} = \frac{\partial}{\partial \beta_1} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i1} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i1} - \beta_0x_{i1} - \beta_1x_{i1}^2 - \beta_2x_{i2}x_{i1})$
+m3 <- matrix(data = c(m1, m2), nrow = 5, ncol = 3, byrow = TRUE)
+m3
+```
 
-$\beta_{2,LSE} = \frac{\partial}{\partial \beta_2} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i2} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i2} - \beta_0x_{i2} - \beta_1x_{i1}x_{i2} - \beta_2x_{i2}^2)$
+c).
+```{r}
+set.seed(123457)
+m1 <- matrix(data = 1, nrow = 2, ncol = 3)
+m2 <- matrix(data = 2, nrow = 2, ncol = 4)
+
+m3 <- matrix(data = c(m1, m2), nrow = 2, ncol = 7, byrow = FALSE)
+m3
+```
+
+d).
+```{r}
+set.seed(123457)
+n = 20
+one_col <- c()
+norm_col <- rnorm(n, mean=3, sd=sqrt(1.5))
+bern_col <- rbinom(n, size=1, 0.6)
+
+```
 
 ### Question 5
 
