@@ -1,0 +1,150 @@
+---
+title: "HW 6.1"
+format: pdf
+editor: visual
+---
+
+Setup:
+
+```{r}
+if (require('HSAUR') == FALSE){
+  install.packages('HSAUR')
+}
+```
+
+### Question 1
+
+a). 
+```{r}
+sales <- HSAUR::Forbes2000$sales
+sum_res <- sum(sales)
+for_sum <- 0
+for (s in sales){
+  for_sum <- for_sum + s
+}
+
+cat("Sum using sum function: ", sum_res)
+cat("\nSum using for loop: ", for_sum)
+```
+
+b). Yes by using the ifelse() function inlined within the table, reshaping the data given to table().
+```{r}
+table(ifelse(sales > 100, yes="Greater than 100", no="Less than or equal to 100"))
+```
+### Question 2
+
+a).
+```{r}
+A <- matrix(data=c(-5, -3, 4, 2, 1, 6), nrow=2, ncol=3, byrow=FALSE)
+B <- matrix(data=c(7, 2, -9, 6, 10, 1), nrow=2, ncol=3, byrow=FALSE)
+cat("The A Matrix: \n")
+A
+cat("The B Matrix: \n")
+B
+cat("----------------\n")
+cat("The matrix sum is: \n")
+matrix(data=A+B, nrow=2, ncol=3)
+cat("\nThe matrix subtraction is: \n")
+matrix(data=A-B, nrow=2, ncol=3)
+```
+
+b). 
+```{r}
+cat("Here is the matrix A multiplyed by c=4: \n")
+4*A
+```
+
+c). # TODO: MATRIX MIGHT BE UNABLE TO MULTIPLY
+```{r}
+A2 <- matrix(data=c(5, 4, 1, -3, 2, 6), nrow = 2, ncol = 3, byrow = TRUE)
+B2 <- matrix(data=c(7, -3, 2), nrow = 1, ncol = 3, byrow = TRUE)
+A2 %*% B2
+```
+
+d).
+```{r}
+D <- matrix(data=c(2, -4, 5, 6, -7, 0, 3, 9, 7), nrow = 3, ncol = 3, byrow=TRUE)
+D
+cat("The determinant of D is: ", det(D))
+```
+
+
+e).
+```{r}
+D_inverse <- solve(D)
+D_inverse %*% D
+```
+
+
+### Question 3
+
+a). The formula would be $f(y;100,4) = \prod^{500}_{j=1}f(y_j;100,4) = \frac{1}{\sqrt{8\pi}}\exp(-\frac{1}{8} \sum^{500}_{j=1} (y_j-100)^2)$
+
+```{r}
+##########
+# Part A #
+##########
+set.seed(123457) # For reproducability 
+n <- 500
+q3_mean <- 100
+q3_var <- 4
+samples <- rnorm(n, 100, 2)
+
+
+
+
+```
+
+b). The mean and variance are calculated below:
+
+```{r}
+
+# Because the mean for each sample is the same as that of
+#the normal distribution the result would be as follows:
+cat("The Summation Mean Is: ", n * q3_mean)
+
+# The same logic can be applied for variance.
+cat("\nThe Summation Variance Is: ", n * q3_var)
+
+
+```
+
+### Question 4
+
+a). Given $Y_i, X_{i1}, X_{i2}$ for $n$ rows, the normal MLR model with intercept $\beta_0$ is as follows: $y = \beta_0 + \beta_1X_1 + \beta_2X_2$. To obtain each optimal beta, we must take partial derivatives of the optimization equation $S(\beta_0,\beta_1; Data) = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2$: $\newline \beta_{0,LSE} = \frac{\partial}{\partial \beta_0} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-1 \Rightarrow \newline -2\sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})$
+
+$\beta_{1,LSE} = \frac{\partial}{\partial \beta_1} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i1} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i1} - \beta_0x_{i1} - \beta_1x_{i1}^2 - \beta_2x_{i2}x_{i1})$
+
+$\beta_{2,LSE} = \frac{\partial}{\partial \beta_2} = \sum^n_{i=1}(y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2})^2 \Rightarrow u = y_i - \beta_0 - \beta_1x_{i1} - \beta_2x_{i2}, u'=-x_{i2} \Rightarrow \newline -2\sum^n_{i=1}(y_ix_{i2} - \beta_0x_{i2} - \beta_1x_{i1}x_{i2} - \beta_2x_{i2}^2)$
+
+### Question 5
+
+```{r}
+
+set.seed(123457)
+n <- 80
+beta_0 <- 2
+beta_1 <- 0.5
+beta_2 <- 0.85
+
+error <- rnorm(n, mean = 0, sd = 0.5)
+gen_x_1 <- rnorm(n, mean = 3, sd = 1)
+gen_x_2 <- rbinom(n, size=1, prob=0.6)
+
+y_val <- beta_0 + beta_1* gen_x_1 + beta_2*gen_x_2 + error
+
+df = data.frame(x=gen_x_1,
+                x2=gen_x_2,
+                y=y_val)
+
+lm(y ~ x + x2, data=df)
+
+
+
+# y ~ beta_0 + beta_1 * x + beta_2 * x2 + error
+#for (i in seq_along(gen_x_1)){
+  # cat("i: ", i, "val: ", beta_0 + beta_1 * gen_x_1[i] + beta_2 * gen_x_2[i] + error[i], "\n")
+  #y_val[i] <- beta_0 + beta_1* gen_x_1[i] + beta_2*gen_x_2[i] + error[i]
+#}
+
+```
