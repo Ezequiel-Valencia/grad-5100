@@ -10,6 +10,9 @@ Setup:
 if (require('HSAUR') == FALSE){
   install.packages('HSAUR')
 }
+if (require('Sleuth3') == FALSE){
+  install.packages('Sleuth3')
+}
 ```
 
 ### Question 1
@@ -130,40 +133,72 @@ d).
 ```{r}
 set.seed(123457)
 n = 20
-one_col <- c()
+one_col <- rep(1, times=n)
 norm_col <- rnorm(n, mean=3, sd=sqrt(1.5))
 bern_col <- rbinom(n, size=1, 0.6)
+
+bmat <- matrix(data = c(one_col, norm_col, bern_col), nrow = n, ncol = 3, byrow = FALSE)
+bmat
+smat <- matrix(data = bmat[sample(n, 8), ], nrow = 8, ncol = 3)
+smat
 
 ```
 
 ### Question 5
 
 ```{r}
+# Fisher's z-transformation of correlation coefficient between two vars
+# Use calculation on brain and body from sleuth3.case0902
+# 
 
-set.seed(123457)
-n <- 80
-beta_0 <- 2
-beta_1 <- 0.5
-beta_2 <- 0.85
+fishers <- function(r){
+  in_log <- (1+r) / (1- r)
+  return (0.5*log(in_log))
+}
 
-error <- rnorm(n, mean = 0, sd = 0.5)
-gen_x_1 <- rnorm(n, mean = 3, sd = 1)
-gen_x_2 <- rbinom(n, size=1, prob=0.6)
+sample_core <- function(x, y){
+  corelation <- cor(x, y)
+  sd_multi <- sd(x) * sd(y)
+  return(corelation / sd_multi)
+}
 
-y_val <- beta_0 + beta_1* gen_x_1 + beta_2*gen_x_2 + error
+# The mean for the normal
+q5_brain <- Sleuth3::case0902$Brain
+q5_body <- Sleuth3::case0902$Body
 
-df = data.frame(x=gen_x_1,
-                x2=gen_x_2,
-                y=y_val)
+sample_cor_cof <- cor(q5_brain, q5_body)
+sample_cor_cof
+fish <- fishers(sample_cor_cof)
+fish
+Sleuth3::case0902
 
-lm(y ~ x + x2, data=df)
-
-
-
-# y ~ beta_0 + beta_1 * x + beta_2 * x2 + error
-#for (i in seq_along(gen_x_1)){
-  # cat("i: ", i, "val: ", beta_0 + beta_1 * gen_x_1[i] + beta_2 * gen_x_2[i] + error[i], "\n")
-  #y_val[i] <- beta_0 + beta_1* gen_x_1[i] + beta_2*gen_x_2[i] + error[i]
-#}
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
