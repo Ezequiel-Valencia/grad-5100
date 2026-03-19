@@ -1,0 +1,132 @@
+---
+title: "HW 6.1"
+format: pdf
+editor: visual
+---
+
+Setup:
+
+```{r}
+if (require('HSAUR') == FALSE){
+  install.packages('HSAUR')
+}
+
+```
+
+### Question 1
+
+a).
+
+```{r}
+q1_csv = read.csv("Q1.csv")$x
+neg_log_lik <- function(lambda) {
+  if (lambda <= 0) return(Inf)           # lambda must be positive
+  -sum(dpois(q1_csv, lambda = lambda, log = TRUE)) # -Sum because we are optimizing for every lambda
+}
+
+n = 100
+csv_min = min(q1_csv)
+csv_max = max(q1_csv)
+optim(par = 1, fn = neg_log_lik, method = "Brent", lower = csv_min, upper = csv_max)
+lambda_hat = optim(par = 1, fn = neg_log_lik, method = "Brent", lower = csv_min, upper = csv_max)$par
+
+cat("Estimated value: ", lambda_hat, " Real Value: ", mean(q1_csv))
+```
+
+b).
+
+```{r}
+
+p0_poisson <- function(lambda){
+  exp(-lambda)
+}
+
+p1_poisson <- function(lambda){
+  exp(-lambda) * lambda
+}
+
+p_poisson <- function(lambda){
+  p0_poisson(lambda) + p1_poisson(lambda)
+}
+
+cat("The maximum liklihood estiamte for p(0) + p(1) is: ", p_poisson(lambda_hat))
+
+
+```
+
+### Question 2
+
+a).
+
+```{r}
+q2n = 4021
+y_data = 0
+log_lik <- function(lambda) {
+  if (lambda <= 0) return(Inf)           # lambda must be positive
+  sum(dpois(y_data, lambda = lambda, log = TRUE)) # -Sum because we are optimizing for every lambda
+}
+
+```
+
+b).
+
+```{r}
+lambda_hat = optim(par = 1, fn = log_lik, method = "Brent", lower = min(y_data), upper = max(y_data))$par
+
+cat("Estimated value: ", lambda_hat, " Real Value: ", mean(y_data))
+
+```
+
+### Question 3
+
+a). The maximum likelihood function is: $L(\pi; y) = \pi^{\sum y_i}(1 - \pi)^{n - \sum y_i}$
+
+```{r}
+q3_csv = read.csv("Q3.csv")$x
+q3n = 100
+
+bernoulli_likelihood <- function(pii){
+  s = sum(q3_csv)
+  pii^s * (1 - pii)^(q3n - s)
+}
+
+```
+
+
+b). The derivative of the likelihood function is $L(\pi; y)' = \frac{\sum y_i}{\pi} - \frac{n - \sum y_i}{1 - \pi}$. When set to 0, $\pi = \frac{\sum y_i}{n}$ and computed results in $0.78$
+```{r}
+
+sum(q3_csv) / q3n
+
+```
+
+### Question 4
+
+a).
+
+```{r}
+q4n = 100
+q4_csv = read.csv("taxreturns.csv")$x
+
+mu_mle = mean(q4_csv)
+var_mle = sum((q4_csv - mu_mle)^2) / q4n
+cat("MLE of Average: ", mu_mle, " MLE of Variance", var_mle)
+
+```
+
+b). The MLE of coefficient variation CV is $0.0492212$.
+
+```{r}
+sqrt(var_mle) / mu_mle
+```
+
+### Question 5
+a). Yes maximizing log-likelihood is equivalent to maximizing likelihood due to the way log-likelihood is derived. That being, log-likelihood is derived by applying log to all entities in the likelihood function and because it's applied to all entities and is strictly increasing, the relationships are still kept true for the function. Due to these relationships staying the same, the derivative which is used to maximize these functions should also hold the same relationship, and therefore allow for the same maximums to be found. 
+
+
+b). The resulting MLE $\theta$ is not a consistent estimate of the true population $\theta$ if the sample size is small due to the variance that can occur through each sample of the population. If the sample size is sufficiently large to capture all inherent qualities of the population, then the variance will negligible. The difference in sample size matters due to the inherent rule of sampling that is as the sample size reaches closer to that of the full population, the resolution of information gathered increases, and so does any estimations.
+
+
+
+
+
